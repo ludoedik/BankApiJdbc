@@ -1,5 +1,6 @@
 package dao;
 
+import dao.statements.StatementsRunner;
 import dto.AccountNumberDto;
 import dto.ChangeBalanceDto;
 import entity.AccountEntity;
@@ -10,6 +11,13 @@ import java.sql.*;
 
 
 public class AccountDaoImpl implements AccountDao {
+
+    StatementsRunner statements;
+
+    public AccountDaoImpl(StatementsRunner statements) {
+        this.statements = statements;
+    }
+
     /**
      * Accepts AccountNumberDto. Reads Account information from DB, returns AccountEntity.
      * @param accountNumber
@@ -19,16 +27,15 @@ public class AccountDaoImpl implements AccountDao {
     public AccountEntity readBalance(AccountNumberDto accountNumber) {
         String SQL_QUERY = "SELECT ID, CLIENT_ID, CURRENCY FROM ACCOUNT WHERE ACCOUNT_NUMBER = '" + accountNumber.getAccountNumber() + "';";
         AccountEntity accountEntity = null;
-        try (Connection connection = DataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        ResultSet resultSet = statements.runPreparedStatementSql(SQL_QUERY);
+        try {
             resultSet.next();
             int id = resultSet.getInt("ID");
             int client_id = resultSet.getInt("CLIENT_ID");
             BigDecimal currency = resultSet.getBigDecimal("CURRENCY");
             accountEntity = new AccountEntity(id, client_id, currency, accountNumber.getAccountNumber());
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+        } catch (SQLException throwables) {
+            System.out.println(throwables.getMessage());
             throw new UnexpectedServerException(500, "Server SQL error.");
         }
         return accountEntity;
@@ -38,12 +45,6 @@ public class AccountDaoImpl implements AccountDao {
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         AccountEntity entity = readBalance(new AccountNumberDto(changeBalanceDto.getAccountNumber()));
         String SQL_QUERY = "UPDATE ACCOUNT SET CURRENCY = " + entity.getCurrency().add(changeBalanceDto.getAmount()) + " WHERE ID = " + entity.getId() + ";";
-        try (Connection connection = DataSource.getConnection();
-             Statement statement = connection.createStatement();) {
-            statement.executeUpdate(SQL_QUERY);
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            throw new UnexpectedServerException(500, "Server SQL error.");
-        }
+        statements.runStatementSql(SQL_QUERY);
     }
 }

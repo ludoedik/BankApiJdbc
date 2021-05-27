@@ -1,6 +1,6 @@
 package dto;
 
-public class CardDto extends Dto{
+public class CardDto {
     private final int id;
     private final String cardNumber;
     private final String cardHolder;

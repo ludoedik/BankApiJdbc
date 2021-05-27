@@ -8,7 +8,7 @@ import entity.CardEntity;
 import java.util.List;
 
 public interface CardRepository {
-    CardEntity addCardToAccount(AccountNumberDto accountNumber, String cardNumber);
+    void addCardToAccount(AccountNumberDto accountNumber, String cardNumber);
     List<CardDto> getCardList (AccountNumberDto account);
     CardDto getCardByNumber(CardNumberDto cardNumberDto);
 }

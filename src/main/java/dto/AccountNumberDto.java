@@ -1,6 +1,6 @@
 package dto;
 
-public class AccountNumberDto extends Dto{
+public class AccountNumberDto {
     private final String accountNumber;
 
     public AccountNumberDto(String accountNumber) {

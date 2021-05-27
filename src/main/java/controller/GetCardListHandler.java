@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dto.AccountNumberDto;
-import exception.AccountOperationsException;
 import exception.BusinessException;
 import exception.UnexpectedServerException;
 import service.ClientServiceImpl;

@@ -2,7 +2,7 @@ package dto;
 
 import java.math.BigDecimal;
 
-public class AccountDto extends Dto{
+public class AccountDto {
     private final int id;
     private final String accountNumber;
     private final BigDecimal balance;

@@ -10,16 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDaoImpl implements ClientDao {
-    public ClientDaoImpl() {
-    }
+    public ClientDaoImpl() { }
 
     public List<ClientEntity> read()  {
-
         String SQL_QUERY = "select * from CLIENT";
         List<ClientEntity> clientEntities = null;
         try (Connection con = DataSource.getConnection();
              PreparedStatement pst = con.prepareStatement( SQL_QUERY );
-             ResultSet rs = pst.executeQuery();) {
+             ResultSet rs = pst.executeQuery()) {
             clientEntities = new ArrayList<>();
             ClientEntity client;
             while ( rs.next() ) {

@@ -49,11 +49,8 @@ public class ChangeBalanceHandler extends Handler implements HttpHandler {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
             ObjectMapper mapper = new ObjectMapper();
             ChangeBalanceDto changeBalanceDto = RequestParser.parseChangeBalanceDtoFromPost(exchange);
-            //mapper.writeValue(out, new ClientServiceImpl().changeBalance(changeBalanceDto));
             new ClientServiceImpl().changeBalance(changeBalanceDto);
             return "ok".getBytes(StandardCharsets.UTF_8);
-            //data = out.toByteArray();
-            //return data;
         } catch (JsonProcessingException exception) {
             System.out.println(exception.getMessage());
             throw new BusinessException(400, "Can't parse JSON");

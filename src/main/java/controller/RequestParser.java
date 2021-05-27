@@ -5,7 +5,6 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import dto.AccountNumberDto;
 import dto.ChangeBalanceDto;
-import dto.Dto;
 import exception.BusinessException;
 
 import java.io.IOException;
@@ -43,22 +42,6 @@ public class RequestParser {
         }
         return accountNumberDto;
     }
-
-    /*public static  <T extends Dto> T parseDtoFromPost(HttpExchange exchange, Class<T> type) {
-        T dto = null;
-        ObjectMapper mapper = new ObjectMapper();
-        Headers requestHeaders = exchange.getRequestHeaders();
-        int contentLength = Integer.parseInt(requestHeaders.getFirst("Content-length"));
-        byte[] data = new byte[contentLength];
-        try (InputStream is = exchange.getRequestBody()) {
-            is.read(data);
-            dto = mapper.readValue(data, type);
-        }
-        catch (IOException exception) {
-            throw new BusinessException(400, "Can't parse POST request.");
-        }
-        return dto;
-    }*/
 
     public static ChangeBalanceDto parseChangeBalanceDtoFromPost(HttpExchange exchange) {
         ChangeBalanceDto changeBalanceDto = null;

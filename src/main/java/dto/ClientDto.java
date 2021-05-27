@@ -1,6 +1,6 @@
 package dto;
 
-public class ClientDto extends Dto{
+public class ClientDto {
     private final String name;
     private final String familyName;
     private final String secondName;
