@@ -32,8 +32,8 @@ public class CardDaoImpl implements CardDao {
         String SQL_QUERY = "SELECT * FROM CARD INNER JOIN ACCOUNT A on CARD.ACCOUNT_ID = A.ID WHERE ACCOUNT_NUMBER = '" +
                 account.getAccountNumber() +"';";
         List<CardEntity> cardEntities = new ArrayList<>();
-        ResultSet rs = statements.runPreparedStatementSql(SQL_QUERY);
-        try {
+
+        try (ResultSet rs = statements.runPreparedStatementSql(SQL_QUERY);){
             while (rs.next()) {
                 int id = rs.getInt("CARD.ID");
                 String cardNumber = rs.getString("CARD_NUMBER");

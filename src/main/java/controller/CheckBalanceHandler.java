@@ -19,42 +19,6 @@ import java.util.Map;
 public class CheckBalanceHandler extends Handler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        /*OutputStream outputStream = exchange.getResponseBody();
-        if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            byte[] data = null;
-            try (ByteArrayOutputStream out = new ByteArrayOutputStream()){
-                AccountNumberDto account = RequestParser.parseAccountNumberDtoFromPost(exchange);
-                objectMapper.writeValue(out, new ClientServiceImpl().getBalance(account));
-                data = out.toByteArray();
-            } catch (JsonProcessingException exception) {
-                System.out.println(exception.getMessage());
-                String response = exception.getMessage();
-                exchange.sendResponseHeaders(500, response.length());
-                outputStream.write(response.getBytes(StandardCharsets.UTF_8));
-            }
-            catch (AccountOperationsException exception) {
-                String response = exception.getMessage();
-                System.out.println(response);
-                exchange.sendResponseHeaders(exception.getErrorCode(), response.length());
-                outputStream.write(response.getBytes(StandardCharsets.UTF_8));
-            }
-            if (data == null) {
-                String response = "Not found";
-                exchange.sendResponseHeaders(404, 0);
-                outputStream.write(response.getBytes(StandardCharsets.UTF_8));
-            } else {
-                exchange.sendResponseHeaders(200, data.length);
-                outputStream.write(data);
-            }
-        }
-        else {
-            String response = "Method not allowed.";
-            exchange.sendResponseHeaders(405, response.length());
-            outputStream.write(response.getBytes(StandardCharsets.UTF_8));
-        }
-        outputStream.flush();
-        outputStream.close();*/
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             handleGet(exchange);
         }
@@ -74,6 +38,10 @@ public class CheckBalanceHandler extends Handler implements HttpHandler {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
             ObjectMapper mapper = new ObjectMapper();
             AccountNumberDto account = new AccountNumberDto(RequestParser.parseURI(exchange).get("accountNumber"));
+            if (account.getAccountNumber() == null) {
+                System.out.println("URI value is incorrect.");
+                throw new BusinessException(400, "URI value is incorrect");
+            }
             mapper.writeValue(out, new ClientServiceImpl().getBalance(account));
             data = out.toByteArray();
             return data;

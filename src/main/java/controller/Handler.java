@@ -12,8 +12,24 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public abstract class Handler {
+    public void handleRequestType (HttpExchange exchange, RequestType requestType) throws IOException{
+        if (requestType.equals(RequestType.GET)) {
+            handleGet(exchange);
+        }
+        else if(requestType.equals(RequestType.POST)) {
+            handlePost(exchange);
+        }
+        else {
+            OutputStream outputStream = exchange.getResponseBody();
+            String response = "Method not allowed.";
+            exchange.sendResponseHeaders(405, response.length());
+            outputStream.write(response.getBytes(StandardCharsets.UTF_8));
+            outputStream.flush();
+            outputStream.close();
+        }
+    }
+
     public void handleGet(HttpExchange exchange) {
-        Map<String, String> paramValues = RequestParser.parseURI(exchange);
         try (OutputStream outputStream = exchange.getResponseBody()) {
             byte[] data = executeService(exchange);
             exchange.sendResponseHeaders(200, data.length);

@@ -17,17 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class GetClientListHandler extends Handler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            handleGet(exchange);
-        }
-        else {
-            OutputStream outputStream = exchange.getResponseBody();
-            String response = "Method not allowed.";
-            exchange.sendResponseHeaders(405, response.length());
-            outputStream.write(response.getBytes(StandardCharsets.UTF_8));
-            outputStream.flush();
-            outputStream.close();
-        }
+        handleRequestType(exchange, RequestType.GET);
     }
 
     @Override

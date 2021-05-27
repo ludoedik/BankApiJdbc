@@ -18,7 +18,7 @@ public class AddNewCardToAccountHandler extends Handler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
-            handleGet(exchange);
+            handlePost(exchange);
         }
         else {
             OutputStream outputStream = exchange.getResponseBody();
@@ -36,9 +36,12 @@ public class AddNewCardToAccountHandler extends Handler implements HttpHandler {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
             ObjectMapper mapper = new ObjectMapper();
             AccountNumberDto accountNumberDto = RequestParser.parseAccountNumberDtoFromPost(exchange);
+            if (accountNumberDto.getAccountNumber() == null) {
+                System.out.println("JSON body is incorrect.");
+                throw new BusinessException(400, "JSON body is incorrect");
+            }
             new ClientServiceImpl().addNewCardToAccount(accountNumberDto);
             return "ok".getBytes(StandardCharsets.UTF_8);
-
         } catch (JsonProcessingException exception) {
             System.out.println(exception.getMessage());
             throw new BusinessException(400, "Can't parse JSON");

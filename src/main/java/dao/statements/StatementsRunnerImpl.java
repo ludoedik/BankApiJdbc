@@ -11,9 +11,9 @@ import java.sql.Statement;
 public class StatementsRunnerImpl implements StatementsRunner {
     @Override
     public ResultSet runPreparedStatementSql(String query) {
-        try (PreparedStatement preparedStatement = DataSource.getConnection().prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()
-        ) {
+        try {
+            PreparedStatement preparedStatement = DataSource.getConnection().prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet;
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage());

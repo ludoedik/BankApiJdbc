@@ -23,7 +23,8 @@ public class RequestParser {
             String[] pair = splitNames[i].split("=");
             URIValues.put(pair[0], pair[1]);
         }
-        URIValues.entrySet().forEach(System.out::println);
+
+        //URIValues.entrySet().forEach(System.out::println);
         return URIValues;
     }
 
@@ -38,6 +39,7 @@ public class RequestParser {
             accountNumberDto = mapper.readValue(data, AccountNumberDto.class);
         }
         catch (IOException exception) {
+            exception.printStackTrace();
             throw new BusinessException(400, "Can't parse POST request.");
         }
         return accountNumberDto;
@@ -54,6 +56,7 @@ public class RequestParser {
             changeBalanceDto = mapper.readValue(data, ChangeBalanceDto.class);
         }
         catch (IOException exception) {
+            exception.printStackTrace();
             throw new BusinessException(400, "Can't parse POST request.");
         }
         return changeBalanceDto;

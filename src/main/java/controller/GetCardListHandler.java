@@ -17,17 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class GetCardListHandler extends Handler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            handleGet(exchange);
-        }
-        else {
-            OutputStream outputStream = exchange.getResponseBody();
-            String response = "Method not allowed.";
-            exchange.sendResponseHeaders(405, response.length());
-            outputStream.write(response.getBytes(StandardCharsets.UTF_8));
-            outputStream.flush();
-            outputStream.close();
-        }
+        handleRequestType(exchange, RequestType.GET);
     }
 
     @Override
@@ -36,12 +26,13 @@ public class GetCardListHandler extends Handler implements HttpHandler {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
             ObjectMapper mapper = new ObjectMapper();
             AccountNumberDto account = new AccountNumberDto(RequestParser.parseURI(exchange).get("accountNumber"));
+            if (account.getAccountNumber() == null) {
+                System.out.println("URI value is incorrect.");
+                throw new BusinessException(400, "URI value is incorrect");
+            }
             mapper.writeValue(out, new ClientServiceImpl().getCardList(account));
             data = out.toByteArray();
             return data;
-        } catch (JsonProcessingException exception) {
-            System.out.println(exception.getMessage());
-            throw new BusinessException(400, "Can't parse JSON");
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
             throw new UnexpectedServerException(500, "Inner server problems");

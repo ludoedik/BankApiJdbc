@@ -18,20 +18,8 @@ import java.nio.charset.StandardCharsets;
 public class ChangeBalanceHandler extends Handler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        /*Map<String, String> paramValues = RequestParser.parseURI(exchange);
-        OutputStream outputStream = exchange.getResponseBody();
-        StringBuilder htmlBuilder = new StringBuilder();
-        ObjectMapper objectMapper = new ObjectMapper();
-        //new ClientServiceImpl().changeBalance(paramValues.get("accountNumber"), new BigDecimal("100"));
-        // encode HTML content
-        String htmlResponse = htmlBuilder.toString();
-        // this line is a must
-        exchange.sendResponseHeaders(200, htmlResponse.length());
-        outputStream.write(htmlResponse.getBytes());
-        outputStream.flush();
-        outputStream.close();*/
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
-            handleGet(exchange);
+            handlePost(exchange);
         }
         else {
             OutputStream outputStream = exchange.getResponseBody();
@@ -47,7 +35,6 @@ public class ChangeBalanceHandler extends Handler implements HttpHandler {
     public byte[] executeService(HttpExchange exchange) {
         byte[] data = null;
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-            ObjectMapper mapper = new ObjectMapper();
             ChangeBalanceDto changeBalanceDto = RequestParser.parseChangeBalanceDtoFromPost(exchange);
             new ClientServiceImpl().changeBalance(changeBalanceDto);
             return "ok".getBytes(StandardCharsets.UTF_8);

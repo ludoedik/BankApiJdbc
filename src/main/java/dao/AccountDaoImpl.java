@@ -27,8 +27,8 @@ public class AccountDaoImpl implements AccountDao {
     public AccountEntity readBalance(AccountNumberDto accountNumber) {
         String SQL_QUERY = "SELECT ID, CLIENT_ID, CURRENCY FROM ACCOUNT WHERE ACCOUNT_NUMBER = '" + accountNumber.getAccountNumber() + "';";
         AccountEntity accountEntity = null;
-        ResultSet resultSet = statements.runPreparedStatementSql(SQL_QUERY);
-        try {
+
+        try (ResultSet resultSet = statements.runPreparedStatementSql(SQL_QUERY)){
             resultSet.next();
             int id = resultSet.getInt("ID");
             int client_id = resultSet.getInt("CLIENT_ID");

@@ -7,8 +7,9 @@ public class AccountNumberDto {
         this.accountNumber = accountNumber;
     }
 
+
     public AccountNumberDto() {
-        accountNumber = null;
+        this.accountNumber = null;
     }
 
     public String getAccountNumber() {

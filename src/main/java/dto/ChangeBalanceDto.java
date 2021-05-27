@@ -11,6 +11,11 @@ public class ChangeBalanceDto {
         this.amount = amount;
     }
 
+    public ChangeBalanceDto(){
+        accountNumber = null;
+        amount = null;
+    }
+
     public String getAccountNumber() {
         return accountNumber;
     }

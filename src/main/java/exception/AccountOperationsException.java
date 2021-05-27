@@ -4,6 +4,7 @@ public class AccountOperationsException extends RuntimeException {
     private int errorCode;
     public AccountOperationsException(int code, String msg) {
         super(msg);
+        errorCode = code;
     }
 
     public int getErrorCode() {
