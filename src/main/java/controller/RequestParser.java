@@ -12,7 +12,15 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Util parser class.
+ */
 public class RequestParser {
+    /**
+     * Parses URI of request. Uses '?' and '=' as a delimiter.
+     * @param httpExchange
+     * @return
+     */
     public static Map<String, String> parseURI(HttpExchange httpExchange) {
         String[] splitNames = httpExchange.
                 getRequestURI()
@@ -28,6 +36,11 @@ public class RequestParser {
         return URIValues;
     }
 
+    /**
+     * Parses input JSON string from request into AccountNumberDto file.
+     * @param exchange
+     * @return
+     */
     public static AccountNumberDto parseAccountNumberDtoFromPost(HttpExchange exchange){
         AccountNumberDto accountNumberDto = null;
         ObjectMapper mapper = new ObjectMapper();
@@ -45,6 +58,11 @@ public class RequestParser {
         return accountNumberDto;
     }
 
+    /**
+     * Parses input JSON string from request into ChangeBalanceDto file.
+     * @param exchange
+     * @return
+     */
     public static ChangeBalanceDto parseChangeBalanceDtoFromPost(HttpExchange exchange) {
         ChangeBalanceDto changeBalanceDto = null;
         ObjectMapper mapper = new ObjectMapper();

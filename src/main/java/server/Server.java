@@ -8,7 +8,8 @@ import java.net.InetSocketAddress;
 
 public class Server {
     /**
-     * Starts new httpserver on port 8000
+     * Starts new httpserver on port 8000.
+     * Creates API contexts.
      * @throws IOException
      */
     public void startServer() throws IOException {

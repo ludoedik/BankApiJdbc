@@ -5,6 +5,10 @@ import com.zaxxer.hikari.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * DataSource class that provides connection pool for database.
+ * Uses HikariCP dependency.
+ */
 public class DataSource {
     private static HikariConfig config = new HikariConfig(
     );
@@ -24,6 +28,11 @@ public class DataSource {
     private DataSource() {
     }
 
+    /**
+     * Returns database connection from connection pool.
+     * @return
+     * @throws SQLException
+     */
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();
     }

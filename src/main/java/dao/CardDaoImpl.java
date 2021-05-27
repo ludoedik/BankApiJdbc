@@ -13,7 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardDaoImpl implements CardDao {
-    StatementsRunner statements;
+    /**
+     * Object of StatementsRunner interface that provides runStatementSql and runPreparedStatementSql methods.
+     * Those methods accept SQL query as input and return ResultSet object.
+     * Appearance of this objects helps to properly test program inputs.
+     */
+    private final StatementsRunner statements;
 
     public CardDaoImpl(StatementsRunner statements) {
         this.statements = statements;

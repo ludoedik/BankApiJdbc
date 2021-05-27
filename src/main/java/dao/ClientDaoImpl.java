@@ -12,7 +12,8 @@ import java.util.List;
 public class ClientDaoImpl implements ClientDao {
     public ClientDaoImpl() { }
 
-    public List<ClientEntity> read()  {
+
+    public List<ClientEntity> readClientList()  {
         String SQL_QUERY = "select * from CLIENT";
         List<ClientEntity> clientEntities = null;
         try (Connection con = DataSource.getConnection();

@@ -14,11 +14,6 @@ import java.util.List;
 import java.util.Random;
 
 public class ClientServiceImpl implements ClientService {
-    /**
-     * This method accepts account number and calls a method of client repository
-     * @param dto
-     * @return
-     */
     @Override
     public List<ClientDto> getClientList(AccountNumberDto dto)  {
         List<ClientDto> clientDTOS = new ArrayList<>();
@@ -31,58 +26,33 @@ public class ClientServiceImpl implements ClientService {
         return clientDTOS;
     }
 
-    /**
-     * Method creates CardRepositoryImpl object and calls addCardToAccount.
-     * Accepts DTO with accountNumber in it and sends it to repository layer.
-     * Returns nothing but lately here could be some business logic.
-     * @param accountNumber
-     * @return
-     */
+
     @Override
     public CardDto addNewCardToAccount(AccountNumberDto accountNumber){
         new CardRepositoryImpl().addCardToAccount(accountNumber, generateCardNumber());
         return null;
     }
 
-    /**
-     * Method creates CardRepositoryImpl object and calls getCardList.
-     * Accepts DTO with accountNumber in it and sends it to repository layer.
-     * Returns List of CardDto objects.
-     * @param accountNumber
-     * @return
-     */
     @Override
     public List<CardDto> getCardList(AccountNumberDto accountNumber) {
         return new CardRepositoryImpl().getCardList(accountNumber);
     }
 
-    /**
-     * Method creates AccountRepositoryImpl object and calls getBalance.
-     * Accepts DTO with accountNumber in it and sends it to repository layer.
-     * Returns AccountDto
-     * @param accountNumber
-     * @return
-     */
     @Override
     public AccountDto getBalance(AccountNumberDto accountNumber) {
         return new AccountRepositoryImpl().getBalance(accountNumber);
     }
 
-    /**
-     * Method creates AccountRepositoryImpl object and calls changeBalance method.
-     * Accepts DTO with accountNumber, amount of money in it and sends it to repository layer.
-     * Returns nothing but lately here could be some business logic.
-     * @param changeBalanceDto
-     */
     @Override
     public void changeBalance(ChangeBalanceDto changeBalanceDto) {
         new AccountRepositoryImpl().changeBalance(changeBalanceDto);
     }
 
     /**
-     * Util function.
+     * Util card number generating method.
      * @return
      */
+    //TODO: fix this pls...
     private String generateCardNumber() {
         Random rnd = new Random();
         BigInteger integer = new BigInteger("1234567890123456");

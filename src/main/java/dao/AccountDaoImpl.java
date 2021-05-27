@@ -11,18 +11,17 @@ import java.sql.*;
 
 
 public class AccountDaoImpl implements AccountDao {
-
+    /**
+     * Object of StatementsRunner interface that provides runStatementSql and runPreparedStatementSql methods.
+     * Those methods accept SQL query as input and return ResultSet object.
+     * Appearance of this objects helps to properly test program inputs.
+     */
     StatementsRunner statements;
 
     public AccountDaoImpl(StatementsRunner statements) {
         this.statements = statements;
     }
 
-    /**
-     * Accepts AccountNumberDto. Reads Account information from DB, returns AccountEntity.
-     * @param accountNumber
-     * @return
-     */
     @Override
     public AccountEntity readBalance(AccountNumberDto accountNumber) {
         String SQL_QUERY = "SELECT ID, CLIENT_ID, CURRENCY FROM ACCOUNT WHERE ACCOUNT_NUMBER = '" + accountNumber.getAccountNumber() + "';";
