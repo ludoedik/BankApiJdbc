@@ -9,6 +9,7 @@ import exception.BusinessException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,13 +19,14 @@ import java.util.Map;
 public class RequestParser {
     /**
      * Parses URI of request. Uses '?' and '=' as a delimiter.
+     *
      * @param httpExchange
      * @return
      */
     public static Map<String, String> parseURI(HttpExchange httpExchange) {
-        String[] splitNames = httpExchange.
-                getRequestURI()
-                .toString()
+        URI uri = httpExchange.getRequestURI();
+        String query = uri.toString();
+        String[] splitNames = query
                 .split("\\?");
         Map<String, String> URIValues = new HashMap<>();
         for (int i = 1; i < splitNames.length; i++) {
@@ -38,10 +40,11 @@ public class RequestParser {
 
     /**
      * Parses input JSON string from request into AccountNumberDto file.
+     *
      * @param exchange
      * @return
      */
-    public static AccountNumberDto parseAccountNumberDtoFromPost(HttpExchange exchange){
+    public static AccountNumberDto parseAccountNumberDtoFromPost(HttpExchange exchange) {
         AccountNumberDto accountNumberDto = null;
         ObjectMapper mapper = new ObjectMapper();
         Headers requestHeaders = exchange.getRequestHeaders();
@@ -50,8 +53,7 @@ public class RequestParser {
         try (InputStream is = exchange.getRequestBody()) {
             is.read(data);
             accountNumberDto = mapper.readValue(data, AccountNumberDto.class);
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             exception.printStackTrace();
             throw new BusinessException(400, "Can't parse POST request.");
         }
@@ -60,6 +62,7 @@ public class RequestParser {
 
     /**
      * Parses input JSON string from request into ChangeBalanceDto file.
+     *
      * @param exchange
      * @return
      */
@@ -72,8 +75,7 @@ public class RequestParser {
         try (InputStream is = exchange.getRequestBody()) {
             is.read(data);
             changeBalanceDto = mapper.readValue(data, ChangeBalanceDto.class);
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             exception.printStackTrace();
             throw new BusinessException(400, "Can't parse POST request.");
         }

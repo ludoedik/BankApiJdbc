@@ -35,7 +35,7 @@ public class CheckBalanceHandler extends Handler implements HttpHandler {
     @Override
     public byte[] executeService(HttpExchange exchange) {
         byte[] data = null;
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ObjectMapper mapper = new ObjectMapper();
             AccountNumberDto account = new AccountNumberDto(RequestParser.parseURI(exchange).get("accountNumber"));
             if (account.getAccountNumber() == null) {

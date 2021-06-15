@@ -3,18 +3,16 @@ package dao.statements;
 import dao.DataSource;
 import exception.UnexpectedServerException;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class StatementsRunnerImpl implements StatementsRunner {
     @Override
-    public ResultSet runPreparedStatementSql(String query) {
+    public ConnectionParams runPreparedStatementSql(String query) {
         try {
-            PreparedStatement preparedStatement = DataSource.getConnection().prepareStatement(query);
+            Connection connection = DataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet;
+            return new ConnectionParams(connection, preparedStatement, resultSet);
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage());
             throw new UnexpectedServerException(500, "Server SQL error.");
@@ -23,7 +21,8 @@ public class StatementsRunnerImpl implements StatementsRunner {
 
     @Override
     public void runStatementSql(String query) {
-        try (Statement statement = DataSource.getConnection().createStatement()) {
+        try (Connection connection = DataSource.getConnection();
+                Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage());

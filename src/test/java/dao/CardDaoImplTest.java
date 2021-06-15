@@ -10,9 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.ConcurrentNavigableMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,6 +26,13 @@ class CardDaoImplTest {
 
     @Mock
     StatementsRunner statements;
+
+    @Mock
+    Connection connection;
+
+    @Mock
+    PreparedStatement preparedStatement;
+
 
     @Captor
     ArgumentCaptor<String> queryCaptor;
@@ -38,18 +48,23 @@ class CardDaoImplTest {
         String SQL_QUERY = "SELECT * FROM CARD INNER JOIN ACCOUNT A on CARD.ACCOUNT_ID = A.ID WHERE ACCOUNT_NUMBER = '" +
                 dto.getAccountNumber() + "';";
         final ResultSet resultSet = resultSetMock();
-        Mockito.when(statements.runPreparedStatementSql(queryCaptor.capture()))
-                .thenReturn(resultSet);
-        final List<CardEntity> entities = daoImpl.readCardListByAccountNumber(dto);
-        assertEquals(6, entities.get(0).getId());
-        assertEquals("1234567890123456", entities.get(0).getCardNumber());
-        assertEquals("IVANOV STEPAN", entities.get(0).getCardHolder());
-        assertEquals(1, entities.get(0).getClientId());
-        assertEquals(7, entities.get(1).getId());
-        assertEquals("1234567934629144", entities.get(1).getCardNumber());
-        assertEquals("IVANOV STEPAN", entities.get(1).getCardHolder());
-        assertEquals(1, entities.get(1).getClientId());
-        assertEquals(SQL_QUERY, queryCaptor.getValue());
+
+        try (MockedStatic<DataSource> utilities = Mockito.mockStatic(DataSource.class)) {
+            utilities.when(DataSource::getConnection).thenReturn(connection);
+            Mockito.when(connection.prepareStatement(queryCaptor.capture())).thenReturn(preparedStatement);
+            Mockito.when(preparedStatement.executeQuery())
+                    .thenReturn(resultSet);
+            final List<CardEntity> entities = daoImpl.readCardListByAccountNumber(dto);
+            assertEquals(6, entities.get(0).getId());
+            assertEquals("1234567890123456", entities.get(0).getCardNumber());
+            assertEquals("IVANOV STEPAN", entities.get(0).getCardHolder());
+            assertEquals(1, entities.get(0).getClientId());
+            assertEquals(7, entities.get(1).getId());
+            assertEquals("1234567934629144", entities.get(1).getCardNumber());
+            assertEquals("IVANOV STEPAN", entities.get(1).getCardHolder());
+            assertEquals(1, entities.get(1).getClientId());
+            assertEquals(SQL_QUERY, queryCaptor.getValue());
+        }
     }
 
     @Test
@@ -69,15 +84,20 @@ class CardDaoImplTest {
         CardNumberDto dto = new CardNumberDto("1234567890123456");
         String SQL_QUERY = "SELECT * FROM CARD INNER JOIN ACCOUNT ON CARD.ACCOUNT_ID = ACCOUNT.ID WHERE CARD_NUMBER = " +
                 dto.getCardNumber() + ";";
-        ResultSet resultSet = resultSetMockGetCard();
-        Mockito.when(statements.runPreparedStatementSql(queryCaptor.capture()))
-                .thenReturn(resultSet);
-        final CardEntity entity = daoImpl.getCard(dto);
-        assertEquals(6, entity.getId());
-        assertEquals("1234567890123456", entity.getCardNumber());
-        assertEquals("IVANOV STEPAN", entity.getCardHolder());
-        assertEquals(1, entity.getClientId());
-        assertEquals(SQL_QUERY, queryCaptor.getValue());
+        final ResultSet resultSet = resultSetMockGetCard();
+
+        try (MockedStatic<DataSource> utilities = Mockito.mockStatic(DataSource.class)) {
+            utilities.when(DataSource::getConnection).thenReturn(connection);
+            Mockito.when(connection.prepareStatement(queryCaptor.capture())).thenReturn(preparedStatement);
+            Mockito.when(preparedStatement.executeQuery())
+                    .thenReturn(resultSet);
+            final CardEntity entity = daoImpl.getCard(dto);
+            assertEquals(6, entity.getId());
+            assertEquals("1234567890123456", entity.getCardNumber());
+            assertEquals("IVANOV STEPAN", entity.getCardHolder());
+            assertEquals(1, entity.getClientId());
+            assertEquals(SQL_QUERY, queryCaptor.getValue());
+        }
 
     }
 

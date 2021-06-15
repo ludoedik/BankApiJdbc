@@ -1,0 +1,86 @@
+# Внесение средств на счет
+POST http://localhost:8000/changeBalance
+Content-Type: application/json
+
+{
+  "accountNumber":"12422313241242414",
+  "amount": "200.00"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response body equals", function() {
+        var body = response.body
+        var expected = "ok"
+        client.assert(expected === body, "Expected" + expected + "But found " + body  );
+    });
+%}
+
+
+### Запрос списка карт
+GET http://localhost:8000/getList?accountNumber=12422313241242414
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response content-type is json", function() {
+        var type = response.contentType.mimeType;
+        client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+    });
+
+    client.test("Response body equals", function() {
+        var body = JSON.stringify(response.body)
+        var expected = "[{\"id\":6,\"cardNumber\":\"1234567890123456\",\"cardHolder\":\"IVANOV STEPAN\"},{\"id\":7,\"cardNumber\":\"1234567934629144\",\"cardHolder\":\"IVANOV STEPAN\"}]"
+        client.assert(expected === body, "Expected" + expected + "But found " + body  );
+    });
+%}
+
+### Выпуск новой карты
+POST http://localhost:8000/add
+Content-Type: application/json
+
+{
+  "accountNumber":"12422313241242414"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response body equals", function() {
+        var body = response.body
+        var expected = "ok"
+        client.assert(expected === body, "Expected" + expected + "But found " + body  );
+    });
+%}
+
+
+### Запрос баланса счета
+GET http://localhost:8000/getBalance?accountNumber=12422313241242414
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response content-type is json", function() {
+        var type = response.contentType.mimeType;
+        client.assert(type === "application/json", "Expected 'application/json' but received '" + type + "'");
+    });
+
+    client.test("Response body equals", function() {
+        var body = JSON.stringify(response.body)
+        var expected = "{\"id\":1,\"accountNumber\":\"12422313241242414\",\"balance\":1010}"
+        client.assert(expected === body, "Expected" + expected + "But found " + body  );
+    });
+%}
+
+

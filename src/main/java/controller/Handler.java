@@ -45,6 +45,7 @@ public abstract class Handler {
     public void handleGet(HttpExchange exchange) {
         try (OutputStream outputStream = exchange.getResponseBody()) {
             byte[] data = executeService(exchange);
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, data.length);
             outputStream.write(data);
             outputStream.flush();

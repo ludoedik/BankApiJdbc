@@ -8,7 +8,7 @@ public interface StatementsRunner {
      * @param query
      * @return
      */
-    ResultSet runPreparedStatementSql(String query);
+    ConnectionParams runPreparedStatementSql(String query);
     /**
      * Runs SQL query from parameters as prepared statement and returns nothing.
      * @param query

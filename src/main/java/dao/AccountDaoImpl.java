@@ -1,5 +1,6 @@
 package dao;
 
+import dao.statements.ConnectionParams;
 import dao.statements.StatementsRunner;
 import dto.AccountNumberDto;
 import dto.ChangeBalanceDto;
@@ -24,15 +25,20 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public AccountEntity readBalance(AccountNumberDto accountNumber) {
-        String SQL_QUERY = "SELECT ID, CLIENT_ID, CURRENCY FROM ACCOUNT WHERE ACCOUNT_NUMBER = '" + accountNumber.getAccountNumber() + "';";
+        String SQL_QUERY = "SELECT ID, CLIENT_ID, CURRENCY FROM ACCOUNT WHERE ACCOUNT_NUMBER = ?";// + accountNumber.getAccountNumber() + "';";
         AccountEntity accountEntity = null;
-
-        try (ResultSet resultSet = statements.runPreparedStatementSql(SQL_QUERY)){
+        try (Connection connection = DataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY);){
+            preparedStatement.setString(1, accountNumber.getAccountNumber());
+            ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             int id = resultSet.getInt("ID");
             int client_id = resultSet.getInt("CLIENT_ID");
             BigDecimal currency = resultSet.getBigDecimal("CURRENCY");
             accountEntity = new AccountEntity(id, client_id, currency, accountNumber.getAccountNumber());
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
         } catch (SQLException throwables) {
             System.out.println(throwables.getMessage());
             throw new UnexpectedServerException(500, "Server SQL error.");
