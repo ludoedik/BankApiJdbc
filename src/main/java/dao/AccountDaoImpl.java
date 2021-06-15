@@ -25,7 +25,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public AccountEntity readBalance(AccountNumberDto accountNumber) {
-        String SQL_QUERY = "SELECT ID, CLIENT_ID, CURRENCY FROM ACCOUNT WHERE ACCOUNT_NUMBER = ?";// + accountNumber.getAccountNumber() + "';";
+        String SQL_QUERY = "SELECT ID, CLIENT_ID, CURRENCY FROM ACCOUNT WHERE ACCOUNT_NUMBER = '" + accountNumber.getAccountNumber() + "';";
         AccountEntity accountEntity = null;
         try (Connection connection = DataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY);){
